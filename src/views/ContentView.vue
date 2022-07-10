@@ -1,8 +1,14 @@
 <template>
   <section class="content">
     <div class="content__container">
-      <app-button @click="loadData">Загрузить данные</app-button>
-      <div class="content__data"></div>
+      <AppButton @click="loadData">Загрузить данные</AppButton>
+      <div class="content__data">
+        <DataItem
+          v-for="item in groupedAndSortedData"
+          :key="item.userId"
+          :item="item"
+        />
+      </div>
     </div>
   </section>
 </template>
@@ -10,27 +16,27 @@
 <script>
 import AppButton from "@/components/AppButton";
 import { mapActions, mapState } from "vuex";
+import DataItem from "@/components/DataItem";
 export default {
   name: "ContentView",
   mixins: [],
   props: {},
-  components: { AppButton },
+  components: { DataItem, AppButton },
   data() {
-    return {
-      isLoading: false,
-    };
+    return {};
   },
   mounted() {},
   methods: {
-    ...mapActions("MainModule", ["getDataAction"]),
+    ...mapActions(["showPreloaderAction", "hidePreloaderAction"]),
+    ...mapActions("ContentModule", ["getDataAction"]),
     async loadData() {
-      this.isLoading = true;
+      this.showPreloaderAction();
       await this.getDataAction();
-      this.isLoading = false;
+      this.hidePreloaderAction();
     },
   },
   computed: {
-    ...mapState("MainModule", ["dataList"]),
+    ...mapState("ContentModule", ["dataList"]),
     groupedAndSortedData() {
       return this.dataList
         .reduce((acc, cv) => {
@@ -59,15 +65,27 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "~@/assets/breakpoints/breakpoints.scss";
 .content {
   width: 100%;
   height: 100%;
   &__container {
     margin: 0 auto;
     padding: 32px;
-    max-width: 1440px;
-    height: 100%;
+    max-width: 1200px;
     width: 100%;
+  }
+  &__data {
+    padding: 16px 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    @media (max-width: $lg) {
+      gap: 16px;
+    }
+    @media (max-width: $sm) {
+      grid-template-columns: 1fr;
+    }
   }
 }
 </style>

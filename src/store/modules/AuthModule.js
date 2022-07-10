@@ -1,15 +1,17 @@
 export default {
   namespaced: true,
   state: {
-    isLoggedIn: false,
+    token: localStorage.getItem("token") || null,
   },
   mutations: {
-    TOGGLE_IS_LOGGED(state, payload) {
-      state.isLoggedIn = payload;
+    SET_TOKEN(state, payload) {
+      state.token = payload;
+      localStorage.setItem("token", payload);
     },
   },
   actions: {
-    login() {},
-    logout() {},
+    onLogin({ commit }, { login, password }) {
+      commit("SET_TOKEN", `${login + password}`);
+    },
   },
 };

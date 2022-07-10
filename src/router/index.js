@@ -21,6 +21,9 @@ const routes = [
     path: "/content",
     name: "ContentView",
     component: () => import("@/views/ContentView"),
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 
@@ -29,9 +32,10 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-// router.beforeEach((to, from, next) => {
-//   to.matched.some((record) => record.meta.requiresAuth) && true
-//     ? next("/login")
-//     : next();
-// });
+router.beforeEach((to, from, next) => {
+  to.matched.some((record) => record.meta.requiresAuth) &&
+  !localStorage.getItem("token")
+    ? next("/login")
+    : next();
+});
 export default router;

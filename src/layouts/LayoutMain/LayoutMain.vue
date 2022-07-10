@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
 export default {
   name: "LayoutMain",
   mixins: [],
@@ -14,12 +13,8 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-    this.getTodoListAction();
-  },
-  methods: {
-    ...mapActions(["getTodoListAction"]),
-  },
+  mounted() {},
+  methods: {},
   computed: {},
   watch: {},
   validations: {},
@@ -30,6 +25,5 @@ export default {
 main {
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
 </style>
